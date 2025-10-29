@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Happy Birthday!</title>
+<style>
+  :root{
+    --bg:#0f1724;
+    --card:#0b1220;
+    --accent:#ff6b6b;
+    --muted:#cbd5e1;
+    --glass: rgba(255,255,255,0.04);
+    --maxw:1100px;
+  }
+  /* Reset + base */
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color:var(--muted);
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(255,107,107,0.06), transparent),
+                linear-gradient(180deg, var(--bg), #061021 80%);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+
+  .wrap{
+    width:100%;
+    max-width:var(--maxw);
+    margin:0 auto;
+    position:relative;
+  }
+
+  .hero{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:18px;
+    padding:28px;
+    box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+    display:grid;
+    grid-template-columns: 1fr 380px;
+    gap:22px;
+    overflow:hidden;
+    min-height:420px;
+  }
+
+  /* Left column */
+  .left{padding:6px 12px; display:flex; flex-direction:column; gap:14px; justify-content:center}
+  .title{
+    font-size:clamp(28px,4.6vw,44px);
+    line-height:1.02;
+    color:white;
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  .subtitle{color:var(--muted); font-size:15px}
+  .age-bubble{
+    display:inline-block;
+    background:linear-gradient(90deg,var(--accent), #ff9a6b);
+    color:white;
+    padding:6px 12px;
+    border-radius:999px;
+    font-weight:700;
+    box-shadow: 0 6px 18px rgba(255,107,107,0.12);
+    margin-top:6px;
+  }
+
+  .controls{
+    margin-top:8px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+
+  .btn{
+    background:var(--accent);
+    border:none;
+    color:white;
+    padding:10px 14px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    box-shadow: 0 6px 18px rgba(255,107,107,0.14);
+  }
+  .btn.secondary{
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.06);
+    color:var(--muted);
+    box-shadow:none;
+  }
+
+  .message-card{
+    margin-top:12px;
+    background:var(--glass);
+    border-radius:12px;
+    padding:14px;
+    color:var(--muted);
+    font-size:15px;
+  }
+
+  /* Right column */
+  .right{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+  }
+
+  /* Cake */
+  .cake-wrap{display:flex; gap:12px; align-items:center; flex-direction:column}
+  .cake{
+    width:170px;
+    position:relative;
+    transform-origin:center;
+    filter: drop-shadow(0 20px 30px rgba(2,6,23,0.6));
+    animation: float 4s ease-in-out infinite;
+  }
+  .cake .layer{background:#ffd6d6; border-radius:12px; padding:18px; margin-bottom:8px; box-shadow: inset 0 6px 14px rgba(255,255,255,0.35) }
+  .cake .cream{background:#fff; height:16px; border-radius:8px; margin: -10px 0 6px 0}
+  .candle{
+    width:12px; height:34px; background:linear-gradient(180deg,#ffcf8a,#ff9a6b);
+    border-radius:6px; position:relative; margin-top:-6px;
+    display:flex; align-items:flex-start; justify-content:center;
+  }
+  .flame{
+    width:10px;height:14px;border-radius:50% 50% 50% 50%;
+    background: radial-gradient(circle at 35% 30%, #fff2a8, #ffcf47 30%, #ff6b6b);
+    position:absolute; top:-10px;
+    box-shadow: 0 6px 20px rgba(255,107,107,0.2);
+    transform-origin:center;
+    animation: flicker 1.2s infinite;
+  }
+
+  @keyframes float{ 0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+  @keyframes flicker{ 0%{transform:scale(1)}50%{transform:scale(0.9) translateY(-2px)}100%{transform:scale(1)}}
+
+  /* Countdown */
+  .countdown{display:flex; gap:10px; margin-top:8px}
+  .countdown .cell{background:rgba(255,255,255,0.03); padding:10px 12px; border-radius:8px; text-align:center}
+  .cell .num{font-weight:800; font-size:18px; color:white}
+  .cell .lbl{font-size:12px; color:var(--muted); margin-top:4px}
+
+  /* Photos carousel */
+  .carousel{
+    width:100%;
+    border-radius:12px;
+    overflow:hidden;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.02);
+  }
+  .carousel img{width:100%; height:260px; object-fit:cover; display:block}
+  .carousel-controls{display:flex; justify-content:center; gap:8px; padding:8px}
+  .dot{width:10px;height:10px;border-radius:50%; background:rgba(255,255,255,0.12); cursor:pointer}
+  .dot.active{background:var(--accent)}
+
+  /* Message + footer */
+  .full-message{margin-top:18px; padding:18px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00)); border:1px solid rgba(255,255,255,0.02); color:var(--muted)}
+  .footer{margin-top:14px; display:flex; gap:10px; align-items:center; justify-content:space-between; color:rgba(255,255,255,0.52); font-size:13px}
+
+  /* Responsive */
+  @media (max-width:880px){
+    .hero{grid-template-columns:1fr; padding:18px}
+    .right{order:-1}
+    .carousel img{height:200px}
+  }
+
+  /* Simple confetti canvas full-screen but within wrap */
+  #confetti-canvas{position:absolute; inset:0; pointer-events:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="hero" id="pageHero">
+    <div class="left">
+      <div class="title" id="titleHead">Happy Birthday, <span id="personName">Alex</span>! 🎉</div>
+      <div class="subtitle" id="subHead">Wishing you a day full of love, cake, and sparkle ✨</div>
+      <div class="age-bubble" id="ageBubble">Turning <span id="ageNum">25</span></div>
+
+      <div class="controls">
+        <button class="btn" id="playBtn">Play Music ▶</button>
+        <button class="btn secondary" id="pauseBtn">Pause ⏸</button>
+        <button class="btn secondary" id="toggleConfetti">Toggle Confetti 🎊</button>
+      </div>
+
+      <div class="countdown" id="countdownRow" aria-hidden="false" style="margin-top:10px">
+        <div class="cell"><div class="num" id="cdDays">00</div><div class="lbl">Days</div></div>
+        <div class="cell"><div class="num" id="cdHours">00</div><div class="lbl">Hours</div></div>
+        <div class="cell"><div class="num" id="cdMins">00</div><div class="lbl">Minutes</div></div>
+        <div class="cell"><div class="num" id="cdSecs">00</div><div class="lbl">Seconds</div></div>
+      </div>
+
+      <div class="message-card" id="shortMessage">
+        <strong>From:</strong> Your friends & family — <em>celebrating you today.</em>
+      </div>
+
+      <div class="full-message" id="personalMessage">
+        <h3 style="margin:0 0 8px 0">A special note</h3>
+        <p id="messageBody" style="margin:0; font-size:15px; color:var(--muted)">
+          Happy Birthday! May every moment be as wonderful as you are. Here's to new memories and joyful surprises.
+        </p>
+      </div>
+
+      <div style="margin-top:12px; display:flex; gap:8px; align-items:center;">
+        <a id="rsvpBtn" href="mailto:example@example.com?subject=Birthday RSVP" class="btn" style="text-decoration:none">RSVP</a>
+        <a id="shareLink" class="btn secondary" href="#" style="text-decoration:none">Share Page</a>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="cake-wrap">
+        <div class="cake" aria-hidden="true">
+          <div class="layer" style="width:170px; text-align:center; font-weight:700; color:#8b1f1f;">Happy</div>
+          <div class="cream"></div>
+          <div class="layer" style="width:150px; text-align:center; font-weight:700; color:#8b1f1f;">Birthday</div>
+          <div class="candle" style="margin-top:-6px;">
+            <div class="flame"></div>
+          </div>
+        </div>
+
+        <div style="text-align:center">
+          <div style="font-weight:700; color:white; font-size:18px" id="rightName">Alex</div>
+          <div style="color:var(--muted); font-size:13px">Make a wish ✨</div>
+        </div>
+      </div>
+
+      <div class="carousel" id="photoCarousel" style="width:100%">
+        <img id="carouselImg" src="" alt="Birthday photo" />
+        <div class="carousel-controls">
+          <div class="dot" data-idx="0"></div>
+          <div class="dot" data-idx="1"></div>
+          <div class="dot" data-idx="2"></div>
+        </div>
+      </div>
+
+      <div class="footer" style="width:100%">
+        <div>Made with ♥</div>
+        <div style="font-size:12px">Open this on desktop for full experience</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Audio (optional) -->
+<audio id="bgAudio" loop preload="none"></audio>
+
+<script>
+/* ========== USER CONFIG - Edit these ========== */
+const conf = {
+  name: "Alex Sharma",                // recipient name
+  shortName: "Alex",                  // short name used in other spots
+  age: 25,                            // number to show
+  message: "Happy Birthday, Alex! May your year be filled with laughter, growth, and late-night cake. ❤️",
+  photos: [
+    // Put image URLs or local paths (relative). Replace or remove as needed.
+    "https://images.unsplash.com/photo-1543353071-873f17a7a088?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=a7a8b2a9b0b6c7d8e9f0",
+    "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=9b3fc3f63e4995b8d7b9",
+    "https://images.unsplash.com/photo-1511988617509-a57c8a288659?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=8a2b4ea60f6f5bb9cbe8"
+  ],
+  music: "", // optional: insert direct mp3 url (leave empty to disable). Example: "https://example.com/song.mp3"
+  birthdayISO: "", // optional ISO date like "2025-11-03T00:00:00" for countdown; leave empty to hide countdown
+  rsvpEmail: "friend@example.com" // edit RSVP mailto
+};
+/* ============================================== */
+
+/* Apply config to page */
+document.getElementById("personName").textContent = conf.name;
+document.getElementById("rightName").textContent = conf.shortName || conf.name;
+document.getElementById("ageNum").textContent = conf.age;
+document.getElementById("titleHead").innerHTML = `Happy Birthday, <span style="color:var(--accent)">${conf.shortName || conf.name}</span>! 🎉`;
+document.getElementById("messageBody").textContent = conf.message;
+document.getElementById("shortMessage").innerHTML = `<strong>From:</strong> Your friends & family — <em>celebrating you today.</em>`;
+document.getElementById("rsvpBtn").href = `mailto:${encodeURIComponent(conf.rsvpEmail)}?subject=${encodeURIComponent("Birthday RSVP for " + conf.name)}`;
+
+/* Photo carousel logic */
+let photos = conf.photos && conf.photos.length ? conf.photos : ["https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=df7a4b1d60a2c4e3b4d6"];
+const imgEl = document.getElementById("carouselImg");
+const dots = Array.from(document.querySelectorAll(".dot"));
+let idx = 0;
+function refreshCarousel(){
+  imgEl.src = photos[idx];
+  dots.forEach(d=>d.classList.toggle("active", Number(d.dataset.idx)===idx));
+}
+dots.forEach(d=>d.addEventListener("click", e=>{
+  idx = Number(e.currentTarget.dataset.idx);
+  refreshCarousel();
+}));
+refreshCarousel();
+/* auto rotate */
+setInterval(()=>{ idx = (idx+1) % photos.length; refreshCarousel(); }, 4000);
+
+/* Audio controls */
+const audio = document.getElementById("bgAudio");
+const playBtn = document.getElementById("playBtn");
+const pauseBtn = document.getElementById("pauseBtn");
+if(conf.music && conf.music.trim().length>5){
+  audio.src = conf.music;
+  playBtn.onclick = ()=>{ audio.play().catch(()=>{}); playBtn.textContent = "Playing ▶"; };
+  pauseBtn.onclick = ()=>{ audio.pause(); playBtn.textContent = "Play Music ▶"; };
+} else {
+  // disable play if no music
+  playBtn.onclick = ()=>{ alert("No music URL configured. Edit the file and set conf.music to an mp3 URL."); };
+  pauseBtn.onclick = ()=>{ /* noop */ };
+}
+
+/* Share link (copies page URL) */
+document.getElementById("shareLink").addEventListener("click", (e)=>{
+  e.preventDefault();
+  try {
+    navigator.clipboard.writeText(location.href);
+    alert("Page link copied to clipboard — share it with friends!");
+  } catch(err){
+    prompt("Copy this link:", location.href);
+  }
+});
+
+/* Countdown */
+if(conf.birthdayISO && conf.birthdayISO.trim().length>3){
+  const target = new Date(conf.birthdayISO);
+  function updateCountdown(){
+    const now = new Date();
+    let diff = Math.max(0, target - now);
+    const days = Math.floor(diff / (1000*60*60*24));
+    diff -= days * (1000*60*60*24);
+    const hours = Math.floor(diff / (1000*60*60));
+    diff -= hours * (1000*60*60);
+    const mins = Math.floor(diff / (1000*60));
+    diff -= mins * (1000*60);
+    const secs = Math.floor(diff / 1000);
+    document.getElementById("cdDays").textContent = String(days).padStart(2,"0");
+    document.getElementById("cdHours").textContent = String(hours).padStart(2,"0");
+    document.getElementById("cdMins").textContent = String(mins).padStart(2,"0");
+    document.getElementById("cdSecs").textContent = String(secs).padStart(2,"0");
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+} else {
+  // hide countdown row if not set
+  document.getElementById("countdownRow").style.display = "none";
+}
+
+/* Confetti: simple canvas particle system */
+const canvas = document.getElementById("confetti-canvas");
+const ctx = canvas.getContext("2d");
+let W = canvas.width = canvas.offsetWidth;
+let H = canvas.height = canvas.offsetHeight;
+window.addEventListener("resize", ()=>{ W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; });
+
+class Confetti {
+  constructor(){
+    this.reset();
+  }
+  reset(){
+    this.x = Math.random()*W;
+    this.y = Math.random()*-H;
+    this.w = 6 + Math.random()*10;
+    this.h = 6 + Math.random()*7;
+    this.vx = -1 + Math.random()*2;
+    this.vy = 2 + Math.random()*3;
+    this.rotation = Math.random()*360;
+    this.vr = -4 + Math.random()*8;
+    this.color = ['#ff6b6b','#ffd166','#6ee7b7','#9b8cff','#60a5fa'][Math.floor(Math.random()*5)];
+    this.opacity = 0.9;
+  }
+  step(){
+    this.x += this.vx;
+    this.y += this.vy;
+    this.vy += 0.03; // gravity
+    this.rotation += this.vr;
+    if(this.y > H + 40 || this.x < -40 || this.x > W + 40) this.reset();
+  }
+  draw(){
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation * Math.PI/180);
+    ctx.globalAlpha = this.opacity;
+    ctx.fillStyle = this.color;
+    ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h);
+    ctx.restore();
+  }
+}
+let confettis = [];
+for(let i=0;i<60;i++) confettis.push(new Confetti());
+let confettiOn = true;
+document.getElementById("toggleConfetti").addEventListener("click", ()=>{
+  confettiOn = !confettiOn;
+  document.getElementById("toggleConfetti").textContent = confettiOn ? "Toggle Confetti 🎊" : "Confetti Off";
+});
+
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  if(confettiOn){
+    confettis.forEach(c=>{ c.step(); c.draw(); });
+  }
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* small flourish: click cake to trigger confetti burst */
+document.querySelector(".cake").addEventListener("click", ()=>{
+  for(let i=0;i<40;i++){
+    const c=new Confetti();
+    c.x = W/2 + (Math.random()-0.5)*180;
+    c.y = H/3 + (Math.random()-0.5)*80;
+    c.vx = -6 + Math.random()*12;
+    c.vy = -6 + Math.random()*2;
+    confettis.push(c);
+  }
+});
+
+/* Accessibility focus: make dots keyboard accessible */
+dots.forEach(d=>{ d.tabIndex=0; d.addEventListener("keydown", (e)=>{ if(e.key==="Enter") d.click(); }) });
+
+/* Nice-to-have: encourage user to customize the conf object if this is shared */
+console.log("Customize the conf object at top of the file to personalize the page. Enjoy! 🎉");
+</script>
+</body>
+</html>

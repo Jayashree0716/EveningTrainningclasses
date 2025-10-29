@@ -1,0 +1,22 @@
+//wap use two abstract methods inside the abstract display your name class and define your college name separately
+
+abstract class A
+{
+abstract void show();
+}
+class B extends A
+{
+void show()
+{
+System.out.println("My name is Rani");
+System.out.println("My college name is NIT");
+}
+}
+public class Myabs1
+{
+public static void main(String args[])
+{
+B obj=new B();
+ obj.show();
+}
+}
